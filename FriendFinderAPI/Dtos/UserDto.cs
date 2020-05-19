@@ -1,11 +1,8 @@
-
 using System.Collections.Generic;
 
-using System.Collections.Generic;
-
-namespace FriendFinderAPI.Models
+namespace FriendFinderAPI.Dtos
 {
-    public class User
+    public class UserDto
     {
         public int UserID { get; set; }
         public string UserName { get; set; }
@@ -13,7 +10,7 @@ namespace FriendFinderAPI.Models
         public string UserPhoneNumber { get; set; }
         public int UserAge { get; set; }
         public bool UserIsTeacher { get; set; }
-        public City UserCity { get; set; }
-        public ICollection<HobbyUser> HobbyUsers { get; set; }
+        public CityDto UserCity { get; set; }
+        public ICollection<HobbyUserDto> HobbyUsers { get; set; }
     }
 }

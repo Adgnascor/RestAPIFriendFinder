@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 
-namespace FriendFinderAPI.Models
+namespace FriendFinderAPI.Dtos
 {
-    public class City
+    public class CityDto
     {
         public int CityID { get; set; }
         public string CityName { get; set; }
         public string CityCountry { get; set; }
         public string CityCounty { get; set; }
-        public ICollection<User> CityUsers { get; set; }
-        public ICollection<Location> CityLocations { get; set; }
+        public ICollection<UserDto> CityUsers { get; set; }
+        public ICollection<LocationDto> CityLocations { get; set; }
     }
 }

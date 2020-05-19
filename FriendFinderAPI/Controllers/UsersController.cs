@@ -45,6 +45,7 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var result = await _userRepository.GetUser(id);
+                
                 if(result == null)
                     return NotFound();
 
