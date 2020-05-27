@@ -58,6 +58,7 @@ namespace FriendFinderAPI.Controllers
             {
                 var result = await _userRepository.GetUser(userid);
                 if(result == null)
+                {
                     return NotFound();
                 }
 
@@ -102,26 +103,31 @@ namespace FriendFinderAPI.Controllers
                 }
                 var mappedResults = _mapper.Map<IEnumerable<UserDto>>(results);
                 return Ok(mappedResults);
-       
-       
-        [HttpGet("teacher/hobby/{hobbyid}", Name = "GetUserTeacherByHobby")]
-        public async Task<ActionResult<UserDto[]>> GetUserTeacherByHobby(int hobbyid)
-        {
-            try
-            {
-                var results = await _userRepository.GetUserTeacherByHobby(hobbyid);
-                var mappedResults = _mapper.Map<UserDto[]>(results);
-                for(int i =0; i< mappedResults.Length; i++)
-                {
-                    mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
-                }
-                return Ok(mappedResults);    
             }
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
+       
+        // [HttpGet("teacher/hobby/{hobbyid}", Name = "GetUserTeacherByHobby")]
+        // public async Task<ActionResult<UserDto[]>> GetUserTeacherByHobby(int hobbyid)
+        // {
+        //     try
+        //     {
+        //         var results = await _userRepository.GetUserTeacherByHobby(hobbyid);
+        //         var mappedResults = _mapper.Map<UserDto[]>(results);
+        //         for(int i =0; i< mappedResults.Length; i++)
+        //         {
+        //             mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
+        //         }
+        //         return Ok(mappedResults);    
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+        //     }
+        // }
 
         //POST:     api/v1.0/users
         [HttpPost(Name = "PostUser")]
@@ -132,7 +138,7 @@ namespace FriendFinderAPI.Controllers
                 var mappedEntity = _mapper.Map<User>(userDto);
                 _userRepository.Add(mappedEntity);
                 if (await _userRepository.Save())
-                    return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity));
+                    return Created($"api/v1.0/users/{mappedEntity.UserId}", _mapper.Map<UserDto>(mappedEntity));
             }
             catch (Exception e)
             {
@@ -193,19 +199,19 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel = "self",
-            Href = Url.Link("GetUser", new {userid = user.UserID})
+            Href = Url.Link("GetUser", new {userid = user.UserId})
             },
             new Link
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("DeleteUser", new {userid = user.UserID})
+            Href = Url.Link("DeleteUser", new {userid = user.UserId})
             },
             new Link
             {
             Method = "Put",
             Rel = "self",
-            Href = Url.Link("PutUser", new {userid = user.UserID})
+            Href = Url.Link("PutUser", new {userid = user.UserId})
             },
             //   new Link
             // {

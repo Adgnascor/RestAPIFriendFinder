@@ -9,19 +9,16 @@ namespace FriendFinderAPI.Configuration
         public MappedProfile()
         {
             CreateMap<City, CityDto>()
-                .ReverseMap()
-                .ForPath(x => x.Links, x => x.Ignore());
+                .ReverseMap();
                 
             CreateMap<Event, EventDto>()
-                .ReverseMap()
-                .ForPath(x => x.Links, x => x.Ignore());
+                .ReverseMap();
  
             CreateMap<EventUser, EventUserDto>()
                 .ReverseMap();
 
             CreateMap<Hobby, HobbyDto>()
-                .ReverseMap()
-                .ForPath(x => x.Links, x => x.Ignore());
+                .ReverseMap();
 
             CreateMap<HobbyLocation, HobbyLocationDto>()
                 .ReverseMap();
@@ -30,12 +27,10 @@ namespace FriendFinderAPI.Configuration
                 .ReverseMap();
                 
             CreateMap<Location, LocationDto>()
-                .ReverseMap()
-                .ForPath(x => x.Links, x => x.Ignore());
+                .ReverseMap();
                 
             CreateMap<User, UserDto>()
-                .ReverseMap()
-               .ForPath(x => x.Links, x => x.Ignore());
+                .ReverseMap();
         }
         
     }
