@@ -37,7 +37,7 @@ namespace FriendFinderAPI.Controllers
                 var mappedResults = _mapper.Map<HobbyDto[]>(results);
                 for(int i = 0; i<mappedResults.Length;i++)
                 {
-                    mappedResults[i].Links =CreateLinksGetAllHobbys(mappedResults[i]);
+                    mappedResults[i].Links =CreateLinksForHobbies(mappedResults[i]);
                 }
                 return Ok(mappedResults);
             }
@@ -48,18 +48,18 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/hobbies/n
-        [HttpGet("{hobbyid}", Name ="GetHobby")]
-        public async Task<ActionResult<HobbyDto>> GetHobby(int hobbyid)
+        [HttpGet("{hobbyId}", Name ="GetHobby")]
+        public async Task<ActionResult<HobbyDto>> GetHobby(int hobbyId)
         {
             try
             {
-                var result = await _hobbyRepository.GetHobby(hobbyid);
+                var result = await _hobbyRepository.GetHobby(hobbyId);
                 
                 if(result == null)
                     return NotFound();
 
                 var mappedResult = _mapper.Map<HobbyDto>(result);
-                mappedResult.Links = CreateLinksGetAllHobbys(mappedResult);
+                mappedResult.Links = CreateLinksForHobbies(mappedResult);
                 return Ok(mappedResult);
             }
             catch(Exception e)
@@ -68,19 +68,19 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("hobby/{hobbyid}/city/{cityid}", Name ="GetHobbyByCity")]
-        public async Task<ActionResult<HobbyDto[]>> GetHobbyByCity(int hobbyid, int cityid)
+        [HttpGet("hobby/{hobbyId}/city/{cityId}", Name ="GetHobbyByCity")]
+        public async Task<ActionResult<HobbyDto[]>> GetHobbyByCity(int hobbyId, int cityId)
         {
             try
             {
-                var result = await _hobbyRepository.GetHobbyByCity(hobbyid, cityid);
+                var result = await _hobbyRepository.GetHobbyByCity(hobbyId, cityId);
                 if (result == null)
                     return NotFound();
 
                 var mappedResults = _mapper.Map<HobbyDto[]>(result);
                 for(int i = 0; i<mappedResults.Length;i++)
                 {
-                    mappedResults[i].Links =CreateLinksGetAllHobbys(mappedResults[i]);
+                    mappedResults[i].Links =CreateLinksForHobbies(mappedResults[i]);
                 }
                 return Ok(mappedResults);            
                 }
@@ -89,16 +89,16 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-        [HttpGet("city/{hobbyid}", Name="GetHobbiesByCity")]
-        public async Task<ActionResult<HobbyDto>> GetHobbiesByCity(int hobbyid)
+        [HttpGet("city/{hobbyId}", Name="GetHobbiesByCity")]
+        public async Task<ActionResult<HobbyDto>> GetHobbiesByCity(int hobbyId)
         {
             try
             {
-                var result = await _hobbyRepository.GetHobbiesByCity(hobbyid);
+                var result = await _hobbyRepository.GetHobbiesByCity(hobbyId);
                 var mappedResults = _mapper.Map<HobbyDto[]>(result);
                 for(int i = 0; i<mappedResults.Length;i++)
                 {
-                    mappedResults[i].Links =CreateLinksGetAllHobbys(mappedResults[i]);
+                    mappedResults[i].Links =CreateLinksForHobbies(mappedResults[i]);
                 }
                 return Ok(mappedResults);           
             }
@@ -108,23 +108,43 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("user/{hobbyid}", Name ="GetHobbiesByUser")]
-        public async Task<ActionResult<HobbyDto>> GetHobbiesByUser(int hobbyid)
+        [HttpGet("user/{hobbyId}", Name ="GetHobbiesByUser")]
+        public async Task<ActionResult<HobbyDto>> GetHobbiesByUser(int hobbyId)
         {
-                try
-                {
-                    var result = await _hobbyRepository.GetHobbiesByUser(hobbyid);
-                    var mappedResults = _mapper.Map<HobbyDto[]>(result);
-                    for(int i = 0; i<mappedResults.Length;i++)
-                {
-                    mappedResults[i].Links =CreateLinksGetAllHobbys(mappedResults[i]);
-                }
-                    return Ok(mappedResults); 
-                }
-                catch(Exception e)
-                {
-                    return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
-                }
+            try
+            {
+                var result = await _hobbyRepository.GetHobbiesByUser(hobbyId);
+                var mappedResults = _mapper.Map<HobbyDto[]>(result);
+                for(int i = 0; i<mappedResults.Length;i++)
+            {
+                mappedResults[i].Links =CreateLinksForHobbies(mappedResults[i]);
+            }
+                return Ok(mappedResults); 
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
+
+        [HttpGet("location/{locationId}", Name ="GetHobbiesByLocation")]
+        public async Task<ActionResult<HobbyDto>> GetHobbiesByLocation(int locationId)
+        {
+            try
+            {
+                var result = await _hobbyRepository.GetHobbiesByLocation(locationId);
+                var mappedResults = _mapper.Map<HobbyDto[]>(result);
+                for(int i = 0; i<mappedResults.Length;i++)
+            {
+                mappedResults[i].Links = CreateLinksForHobbies(mappedResults[i]);
+            }
+
+                return Ok(mappedResults); 
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
 
         //POST: api/v1.0/hobbies
@@ -137,7 +157,7 @@ namespace FriendFinderAPI.Controllers
                 _hobbyRepository.Add(mappedEntity);
 
                 if(await _hobbyRepository.Save())
-                     return Created($"api/v1.0/cities/{mappedEntity.HobbyID}", _mapper.Map<HobbyDto>(mappedEntity));
+                     return Created($"api/v1.0/cities/{mappedEntity.HobbyId}", _mapper.Map<HobbyDto>(mappedEntity));
                    
             }
             catch (Exception e)
@@ -148,14 +168,14 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/hobbies/n
-        [HttpPut("{hobbyid}", Name= "PutHobby")]
-        public async Task<ActionResult<HobbyDto>> PutHobby(int hobbyID, HobbyDto hobbyDto)
+        [HttpPut("{hobbyId}", Name= "PutHobby")]
+        public async Task<ActionResult<HobbyDto>> PutHobby(int hobbyId, HobbyDto hobbyDto)
         {
             try
             {
-                var oldHobby = await _hobbyRepository.GetHobby(hobbyID);
+                var oldHobby = await _hobbyRepository.GetHobby(hobbyId);
                 if(oldHobby == null)
-                    return NotFound($"There's no hobby with that id: {hobbyID}");
+                    return NotFound($"There's no hobby with that id: {hobbyId}");
 
                 var newHobby = _mapper.Map(hobbyDto, oldHobby);
                 _hobbyRepository.Update(newHobby);
@@ -172,14 +192,14 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/hobbies/n
-        [HttpDelete("{hobbyid}", Name ="DeleteHobby")]
-        public async Task<ActionResult> DeleteHobby(int hobbyID)
+        [HttpDelete("{hobbyId}", Name ="DeleteHobby")]
+        public async Task<ActionResult> DeleteHobby(int hobbyId)
         {
             try
             {
-                var hobby = await _hobbyRepository.GetHobby(hobbyID);
+                var hobby = await _hobbyRepository.GetHobby(hobbyId);
                 if(hobby == null)
-                    return NotFound($"Could not find any hobby with that id: {hobbyID}");
+                    return NotFound($"Could not find any hobby with that id: {hobbyId}");
 
                 _hobbyRepository.Delete(hobby);
                 if(await _hobbyRepository.Save())
@@ -192,29 +212,28 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
-        
-         private IEnumerable<Link> CreateLinksGetAllHobbys(HobbyDto hobby)
+        private IEnumerable<Link> CreateLinksForHobbies(HobbyDto hobby)
         {
             var links = new[]
             {
-            new Link
-            {
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetHobby", new {hobbyid = hobby.HobbyID})
-            },
-            new Link
-            {
-            Method = "DELETE",
-            Rel = "self",
-            Href = Url.Link("DeleteHobby", new {hobbyid = hobby.HobbyID})
-            },
-            new Link
-            {
-                Method = "PUT",
-                Rel = "self",
-                Href = Url.Link("PutHobby", new {hobbyid = hobby.HobbyID})
-            }
+                new Link
+                {
+                    Method = "GET",
+                    Rel = "self",
+                    Href = Url.Link("GetHobby", new {hobbyId = hobby.HobbyId}).ToLower()
+                },
+                new Link
+                {
+                    Method = "DELETE",
+                    Rel = "self",
+                    Href = Url.Link("DeleteHobby", new {hobbyId = hobby.HobbyId}).ToLower()
+                },
+                new Link
+                {
+                    Method = "PUT",
+                    Rel = "self",
+                    Href = Url.Link("PutHobby", new {hobbyId = hobby.HobbyId}).ToLower()
+                }
             };
             return links;
         }

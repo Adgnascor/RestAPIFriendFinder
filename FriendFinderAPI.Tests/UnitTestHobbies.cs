@@ -45,32 +45,24 @@ namespace FriendFinderAPI.Tests
             var result = await hobbyRepository.GetHobby(2);
 
             //Assert
-            Assert.Equal(2, result.HobbyID);
-            
+            Assert.Equal(2, result.HobbyId);
         }
-       
-
-        
        
         private static IList<Hobby> GenerateHobbies()
         { 
-      return new List<Hobby> 
-        {
-         new Hobby
+            return new List<Hobby> 
             {
-           HobbyActivationLevel = HobbyActivationLevel.High,
-             HobbyID = 1,
-             HobbyName = "Badminton",
+                new Hobby
+                {
+                    HobbyId = 1,
+                    HobbyName = "Badminton",
 
-            },
-            new Hobby{
-            HobbyActivationLevel = HobbyActivationLevel.Moderate,
-             HobbyID = 2,
-             HobbyName = "Curling"
-            
-            }
-
-        };
-    }
+                },
+                new Hobby{
+                    HobbyId = 2,
+                    HobbyName = "Curling"
+                }
+            };
+        }
     }
 }

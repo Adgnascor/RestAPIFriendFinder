@@ -12,10 +12,11 @@ namespace FriendFinderAPI.Services
         public HobbyRepository(FriendFinderContext context, ILogger<HobbyRepository> logger) : base(context, logger)
         {
         }
-        public async Task<Hobby> GetHobby(int HobbyID)
+        public async Task<Hobby> GetHobby(int hobbyId)
         {
-            _logger.LogInformation($"Getting Hobby with id: {HobbyID}");
-            IQueryable<Hobby> query = _context.Hobbies.Where(u => u.HobbyID == HobbyID);
+            _logger.LogInformation($"Getting Hobby with id: {hobbyId}");
+            IQueryable<Hobby> query = _context.Hobbies
+                                        .Where(u => u.HobbyId == hobbyId);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -26,30 +27,45 @@ namespace FriendFinderAPI.Services
             return await query.ToArrayAsync();
         }
 
-        public async Task<Hobby> GetHobbyByCity(int hobbyID, int cityID)
+        public async Task<Hobby> GetHobbyByCity(int hobbyId, int cityId)
         {
-             _logger.LogInformation($"Getting Hobby in city with id {cityID}");
-             IQueryable<Hobby> query = _context.Hobbies.Where(h=>h.HobbyLocations.Any(l=>l.Location.LocationCity.CityID == cityID) && h.HobbyID ==hobbyID);
+             _logger.LogInformation($"Getting Hobby in city with id: {cityId}");
+             IQueryable<Hobby> query = _context.Hobbies
+                                        .Where(h=>h.HobbyLocations
+                                        .Any(l=>l.Location.City.CityId == cityId) && h.HobbyId ==hobbyId);
 
              return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Hobby[]> GetHobbiesByCity(int cityID)
+        public async Task<Hobby[]> GetHobbiesByCity(int cityId)
         {
-            _logger.LogInformation($"Getting Hobbies in city with id{cityID}");
-            IQueryable<Hobby> query = _context.Hobbies.Where(h=>h.HobbyLocations.Any(l=>l.Location.LocationCity.CityID == cityID));
+            _logger.LogInformation($"Getting Hobbies in city with id: {cityId}");
+            IQueryable<Hobby> query = _context.Hobbies
+                                        .Where(h=>h.HobbyLocations
+                                        .Any(l=>l.Location.City.CityId == cityId));
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Hobby[]> GetHobbiesByUser(int userID)
+        public async Task<Hobby[]> GetHobbiesByUser(int userId)
         {
-            _logger.LogInformation($"Getting Hobbies in city with id{userID}");
-            IQueryable<Hobby> query = _context.Hobbies.Where(h=>h.HobbyUsers.Any(u=>u.UserID == userID));
+            _logger.LogInformation($"Getting Hobbies in city with id: {userId}");
+            IQueryable<Hobby> query = _context.Hobbies
+                                        .Where(h=>h.HobbyUsers
+                                        .Any(u=>u.UserId == userId));
 
             return await query.ToArrayAsync();
 
         }
-        
+        public async Task<Hobby[]> GetHobbiesByLocation(int locationId)
+        {
+            _logger.LogInformation($"Getting Hobbies in location with id: {locationId}");
+            IQueryable<Hobby> query = _context.Hobbies
+                                    .Where(hl=>hl.HobbyLocations
+                                    .Any(x => x.LocationId == locationId));
+
+            return await query.ToArrayAsync();
+
+        }
     }
 }

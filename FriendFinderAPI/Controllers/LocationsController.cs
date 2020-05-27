@@ -113,7 +113,7 @@ namespace FriendFinderAPI.Controllers
                 _locationRepository.Add(mappedEntity);
 
                 if(await _locationRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.LocationID}", _mapper.Map<LocationDto>(mappedEntity));
+                    return Created($"api/v1.0/cities/{mappedEntity.LocationId}", _mapper.Map<LocationDto>(mappedEntity));
             }
             catch (Exception e)
             {
@@ -175,19 +175,19 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel = "self",
-            Href = Url.Link("Getlocation", new {id = location.LocationID}).ToLower()
+            Href = Url.Link("Getlocation", new {id = location.LocationId}).ToLower()
             },
             new Link
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("DeleteLocation", new {id = location.LocationID}).ToLower()
+            Href = Url.Link("DeleteLocation", new {id = location.LocationId}).ToLower()
             },
             new Link
             {
             Method = "PUT",
             Rel = "self",
-            Href = Url.Link("PutLocation", new {id = location.LocationID}).ToLower()
+            Href = Url.Link("PutLocation", new {id = location.LocationId}).ToLower()
             }
             };
             return links;

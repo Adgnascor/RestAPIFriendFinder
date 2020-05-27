@@ -5,12 +5,12 @@ namespace FriendFinderAPI.Dtos
 {
     public class CityDto
     {
-        public int CityID { get; set; }
+        public int CityId { get; set; }
         public string CityName { get; set; }
         public string CityCountry { get; set; }
         public string CityCounty { get; set; }
-        public ICollection<UserDto> CityUsers { get; set; }
-        public ICollection<LocationDto> CityLocations { get; set; }
+        public ICollection<UserDto> Users { get; set; }
+        public ICollection<LocationDto> Locations { get; set; }
         public IEnumerable<Link> Links {get; set;}
     }
 }

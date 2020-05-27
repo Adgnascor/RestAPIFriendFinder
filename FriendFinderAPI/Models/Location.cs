@@ -5,15 +5,14 @@ namespace FriendFinderAPI.Models
 {
     public class Location
     {
-        public int LocationID { get; set; }
+        public int LocationId { get; set; }
         public string LocationName { get; set; }
 
-        [ForeignKey("CityID")]
-        public int LocationCityID { get; set; }
-        public City LocationCity { get; set; }
+        [ForeignKey("CityId")]
+        public int CityId { get; set; }
+        public City City { get; set; }
         
         public ICollection<HobbyLocation> HobbyLocations { get; set; }
-
         public IEnumerable<Link> Links{get;set;}
         
     }

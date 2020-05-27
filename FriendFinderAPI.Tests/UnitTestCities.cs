@@ -34,7 +34,7 @@ namespace FriendFinderAPI.Tests
             Assert.Equal(2, (int)result.Length);
         }
         [Fact]
-        public async void GetCityByIDTest()
+        public async void GetCityByIdTest()
         {
              //Arrange
             IList<City> cities = GenerateCities();
@@ -48,7 +48,7 @@ namespace FriendFinderAPI.Tests
             var result = await cityRepository.GetCity(2);
 
             //Assert
-            Assert.Equal(2, result.CityID);
+            Assert.Equal(2, result.CityId);
         }
         private static IList<City> GenerateCities()
     {
@@ -56,13 +56,13 @@ namespace FriendFinderAPI.Tests
         {
             new City
             {
-            CityID = 1,
+            CityId = 1,
             CityName ="Göteborg",
             CityCountry = "Sweden",
             CityCounty = "Västra Götaland"
             },
             new City{
-            CityID = 2,
+            CityId = 2,
             CityName ="Stockholm",
             CityCountry = "Sweden",
             CityCounty = "Stockholm"

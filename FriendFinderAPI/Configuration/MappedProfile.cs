@@ -29,7 +29,6 @@ namespace FriendFinderAPI.Configuration
             CreateMap<HobbyUser, HobbyUserDto>()
                 .ReverseMap();
                 
-                
             CreateMap<Location, LocationDto>()
                 .ReverseMap()
                 .ForPath(x => x.Links, x => x.Ignore());

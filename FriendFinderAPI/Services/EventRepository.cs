@@ -13,10 +13,10 @@ namespace FriendFinderAPI.Services
 
      }
 
-      public async Task<Event> GetEvent(int eventID)
+      public async Task<Event> GetEvent(int eventId)
       {
-          _logger.LogInformation($"Getting Event with id: {eventID}");
-          Event query = await _context.Events.Where(e=>e.EventID == eventID).FirstOrDefaultAsync();
+          _logger.LogInformation($"Getting Event with id: {eventId}");
+          Event query = await _context.Events.Where(e=>e.EventId == eventId).FirstOrDefaultAsync();
 
           return query;
       }  
@@ -29,24 +29,24 @@ namespace FriendFinderAPI.Services
       
       }
 
-       public async Task<Event[]> GetEventsByHobby(int hobbyID)
+       public async Task<Event[]> GetEventsByHobby(int hobbyId)
        {
-            _logger.LogInformation($"Getting Events for hobby with ID:{hobbyID}");
-            IQueryable<Event> query = _context.Events.Where(h=>h.EventHobby.HobbyID == hobbyID);
+            _logger.LogInformation($"Getting Events for hobby with ID:{hobbyId}");
+            IQueryable<Event> query = _context.Events.Where(h=>h.Hobby.HobbyId == hobbyId);
 
             return await query.ToArrayAsync();
        }
-       public async Task<Event[]> GetEventsByHobbyCity(int hobbyID, int cityID)
+       public async Task<Event[]> GetEventsByHobbyCity(int hobbyId, int cityId)
        {
-           _logger.LogInformation($"Getting Events for hobby with ID:{hobbyID} and in the location with id: {cityID}");
-            IQueryable<Event> query = _context.Events.Where(h=>h.EventHobby.HobbyID == hobbyID && h.EventCity.CityID == cityID);
+           _logger.LogInformation($"Getting Events for hobby with ID:{hobbyId} and in the location with id: {cityId}");
+            IQueryable<Event> query = _context.Events.Where(h=>h.Hobby.HobbyId == hobbyId && h.City.CityId == cityId);
 
             return await query.ToArrayAsync();
        }
-        public async Task<Event[]> GetEventsByCity(int cityID)
+        public async Task<Event[]> GetEventsByCity(int cityId)
         {
-            _logger.LogInformation($"Getting Events in location with location id{cityID}");
-            IQueryable<Event> query = _context.Events.Where(l=>l.EventCity.CityID == cityID);
+            _logger.LogInformation($"Getting Events in location with location id{cityId}");
+            IQueryable<Event> query = _context.Events.Where(l=>l.City.CityId == cityId);
 
             return await query.ToArrayAsync();
             

@@ -12,10 +12,10 @@ namespace FriendFinderAPI.Services
         public CityRepository(FriendFinderContext context, ILogger<CityRepository> logger) : base(context, logger)
         {
         }
-        public async Task<City> GetCity(int CityID)
+        public async Task<City> GetCity(int cityId)
         {
-            _logger.LogInformation($"Getting City with id: {CityID}");
-            IQueryable<City> query = _context.Cities.Where(u => u.CityID == CityID);
+            _logger.LogInformation($"Getting City with id: {cityId}");
+            IQueryable<City> query = _context.Cities.Where(u => u.CityId == cityId);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -26,10 +26,13 @@ namespace FriendFinderAPI.Services
             return await query.ToArrayAsync();
         }
 
-        public async Task<City[]> GetCitiesByHobby(int hobbyID)
+        public async Task<City[]> GetCitiesByHobby(int hobbyId)
         {
-            _logger.LogInformation($"Getting Cities Where hobby with id {hobbyID} exists");
-             IQueryable<City> query = _context.Cities.Where(l=>l.CityLocations.Any(i=>i.HobbyLocations.Any(h=>h.Hobby.HobbyID == hobbyID)));
+            _logger.LogInformation($"Getting Cities Where hobby with id {hobbyId} exists");
+             IQueryable<City> query = _context.Cities
+                                        .Where(city=>city.Locations
+                                        .Any(i=>i.HobbyLocations
+                                        .Any(h=>h.Hobby.HobbyId == hobbyId)));
 
              return await query.ToArrayAsync();
 

@@ -52,13 +52,13 @@ namespace FriendFinderAPI.Tests
         {
             new Location
             {
-           LocationID = 1,
+            LocationId = 1,
             LocationName = "Fjäderborgen",
 
             },
             new Location{
            
-             LocationID = 2,
+            LocationId = 2,
             LocationName = "Fysiken",
 
             }

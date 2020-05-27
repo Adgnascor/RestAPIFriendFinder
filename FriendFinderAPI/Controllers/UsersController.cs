@@ -58,7 +58,6 @@ namespace FriendFinderAPI.Controllers
             {
                 var result = await _userRepository.GetUser(userid);
                 if(result == null)
-                {
                     return NotFound();
                 }
 
@@ -72,24 +71,24 @@ namespace FriendFinderAPI.Controllers
             }
         }
         
-        [HttpGet("hobby/{hobbyid}", Name ="GetUserByHobby")]
-        public async Task<ActionResult<UserDto[]>> GetUsersByHobby(int hobbyid)
-        {
-            try
-            {
-                var results = await _userRepository.GetUsersByHobby(hobbyid);
-                var mappedResults = _mapper.Map<UserDto[]>(results);
-                for(int i =0; i< mappedResults.Length; i++)
-                {
-                    mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
-                }
-                return Ok(mappedResults);            
-                }
-            catch(Exception e)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
-            }
-        }
+        // [HttpGet("hobby/{hobbyid}", Name ="GetUserByHobby")]
+        // public async Task<ActionResult<UserDto[]>> GetUsersByHobby(int hobbyid)
+        // {
+        //     try
+        //     {
+        //         var results = await _userRepository.GetUsersByHobby(hobbyid);
+        //         var mappedResults = _mapper.Map<UserDto[]>(results);
+        //         for(int i =0; i< mappedResults.Length; i++)
+        //         {
+        //             mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
+        //         }
+        //         return Ok(mappedResults);            
+        //         }
+        //     catch(Exception e)
+        //     {
+        //         return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+        //     }
+        // }
 
         [HttpGet("hobby/{hobbyId}/city/{cityId}", Name = "GetUserByHobbyInCity")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByHobbyInCity(int hobbyId, int cityId)
@@ -104,35 +103,28 @@ namespace FriendFinderAPI.Controllers
                 var mappedResults = _mapper.Map<IEnumerable<UserDto>>(results);
                 return Ok(mappedResults);
        
+       
+        [HttpGet("teacher/hobby/{hobbyid}", Name = "GetUserTeacherByHobby")]
+        public async Task<ActionResult<UserDto[]>> GetUserTeacherByHobby(int hobbyid)
+        {
+            try
+            {
+                var results = await _userRepository.GetUserTeacherByHobby(hobbyid);
+                var mappedResults = _mapper.Map<UserDto[]>(results);
+                for(int i =0; i< mappedResults.Length; i++)
+                {
+                    mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
+                }
+                return Ok(mappedResults);    
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
 
-                // [HttpGet("teacher/hobby/{hobbyid}", Name = "GetUserTeacherByHobby")]
-        // public async Task<ActionResult<UserDto[]>> GetUserTeacherByHobby(int hobbyid)
-        // {
-        //     try
-        //     {
-        //         var results = await _userRepository.GetUserTeacherByHobby(hobbyid);
-        //         var mappedResults = _mapper.Map<UserDto[]>(results);
-        //         for(int i =0; i< mappedResults.Length; i++)
-        //         {
-        //             mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
-        //         }
-        //         return Ok(mappedResults);    
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
-        //     }
-        // }
-
-
         //POST:     api/v1.0/users
-        [HttpPost (Name = "PostUser")]
+        [HttpPost(Name = "PostUser")]
         public async Task<ActionResult<UserDto>> PostUser(UserDto userDto)
         {
             try
@@ -193,8 +185,6 @@ namespace FriendFinderAPI.Controllers
 
             return BadRequest();
         }
-
-        
         private IEnumerable<Link> CreateLinksGetAllUsers(UserDto user)
         {
             var links = new[]
@@ -233,5 +223,5 @@ namespace FriendFinderAPI.Controllers
             return links;
         }
        
+        }
     }
-}

@@ -37,56 +37,43 @@ namespace FriendFinderAPI.Context
         {
             modelBuilder.Ignore<Link>();
             modelBuilder.Entity<HobbyUser>()
-            .HasKey(hu => new { hu.HobbyID, hu.UserID });
+            .HasKey(hu => new { hu.HobbyId, hu.UserId });
 
             modelBuilder.Entity<HobbyUser>()
             .HasOne(hu => hu.Hobby)
             .WithMany(h => h.HobbyUsers)
-            .HasForeignKey(hu => hu.HobbyID);
+            .HasForeignKey(hu => hu.HobbyId);
 
             modelBuilder.Entity<HobbyUser>()
             .HasOne(hu => hu.User)
             .WithMany(h => h.HobbyUsers)
-            .HasForeignKey(hu => hu.UserID);
+            .HasForeignKey(hu => hu.UserId);
 
             modelBuilder.Entity<HobbyLocation>()
-            .HasKey(hl => new { hl.HobbyID, hl.LocationID });
+            .HasKey(hl => new { hl.HobbyId, hl.LocationId });
 
             modelBuilder.Entity<HobbyLocation>()
             .HasOne(hl => hl.Hobby)
             .WithMany(h => h.HobbyLocations)
-            .HasForeignKey(hl => hl.HobbyID);
+            .HasForeignKey(hl => hl.HobbyId);
 
             modelBuilder.Entity<HobbyLocation>()
             .HasOne(hl => hl.Location)
             .WithMany(h => h.HobbyLocations)
-            .HasForeignKey(hl => hl.LocationID);
+            .HasForeignKey(hl => hl.LocationId);
 
             modelBuilder.Entity<EventUser>()
-            .HasKey(bc => new { bc.EventID, bc.UserID });
+            .HasKey(bc => new { bc.EventId, bc.UserId });
             modelBuilder.Entity<EventUser>()
             .HasOne(bc => bc.Event)
             .WithMany(b => b.EventUsers)
-            .HasForeignKey(bc => bc.EventID);
+            .HasForeignKey(bc => bc.EventId);
             modelBuilder.Entity<EventUser>()
             .HasOne(bc => bc.User)
             .WithMany(c => c.EventUsers)
-            .HasForeignKey(bc => bc.UserID)
+            .HasForeignKey(bc => bc.UserId)
             .OnDelete(DeleteBehavior.NoAction);
             
-            
-            
-
-            // modelBuilder.Entity<City>()
-            // .HasMany<User>(c=> c.CityUsers)
-            // .WithOne(u=>u.UserCity)
-            // .HasForeignKey(u=> u.UserCityID);
-            // .OnDelete(DeleteBehavior.ClientSetNull);
-
-            // modelBuilder.Entity<User>()
-            // .HasOne(u=> u.UserCity)
-            // .WithMany(c=> c.CityUsers)
-            // .OnDelete(DeleteBehavior.NoAction);
 
             string citiesPath = @"../Documentation/DataSets/world-cities.txt";
             string[] lines = System.IO.File.ReadAllLines(citiesPath);
@@ -96,7 +83,7 @@ namespace FriendFinderAPI.Context
                 string[] split = lines[i].Split(',');
                 City city = new City
                 {
-                    CityID = i,
+                    CityId = i,
                     CityName = split[0],
                     CityCountry = split[1],
                     CityCounty = split[2],
@@ -109,112 +96,107 @@ namespace FriendFinderAPI.Context
             modelBuilder.Entity<User>()
             .HasData(new
             {
-                UserID = 1,
+                UserId = 1,
                 UserName = "Sebbe",
                 UserAdress = "Drottninggatan",
                 UserPhoneNumber = "+46XXXXXXX",
                 UserAge = 20,
-                UserIsTeacher = true,
-                UserCityID = 2
+                CityId = 2
             }
             , new
             {
-                UserID = 2,
+                UserId = 2,
                 UserName = "Oskar",
                 UserAdress = "Kungsgatan",
                 UserPhoneNumber = "+46XXXXXXX2",
                 UserAge = 22,
-                UserIsTeacher = false,
-                UserCityID = 1
+                CityId = 1
             }
             , new
             {
-                UserID = 3,
+                UserId = 3,
                 UserName = "William",
                 UserAdress = "MorTest",
                 UserPhoneNumber = "+46XXXXXXX3",
                 UserAge = 28,
-                UserIsTeacher = true,
-                UserCityID = 1
+                CityId = 1
             });
 
             modelBuilder.Entity<Location>()
             .HasData(new
             {
-                LocationID = 1,
+                LocationId = 1,
                 LocationName = "Fjäderborgen",
-                LocationCityID = 2,
+                CityId = 2,
             }
             , new
             {
-                LocationID = 2,
+                LocationId = 2,
                 LocationName = "The Castle With Zero Books...",
-                LocationCityID = 1,
+                CityId = 1,
             });
 
             modelBuilder.Entity<Event>()
             .HasData(new
             {
-                EventID = 1,
+                EventId = 1,
                 EventName = "Lets Do some Awsome Curling",
-                //EventHobbyID = 297,
-                EventHobbyID = 2,
-                EventResposibleUserID = 1,
-                EventCityID = 1,
+                //EventHobbyId = 297,
+                HobbyId = 2,
+                CityID = 1,
             }
             , new
             {
-                EventID = 2,
+                EventId = 2,
                 EventName = "BookClub All About The Books",
-                //EventHobbyID = 922,
-                EventHobbyID = 1,
-                EventResposibleUserID = 3,
-                EventCityID = 2,
+                //EventHobbyId = 922,
+                HobbyId = 1,
+                CityID = 2,
             });
 
             modelBuilder.Entity<HobbyLocation>()
             .HasData(new
             {
-                HobbyID = 1,
-                LocationID = 1,
+                HobbyId = 1,
+                LocationId = 1,
             }
             , new
             {
-                HobbyID = 2,
-                LocationID = 2,
+                HobbyId = 2,
+                LocationId = 2,
             });
 
             modelBuilder.Entity<EventUser>()
             .HasData(new
             {
                 EventUserID = 1,
-                EventID = 1,
-                UserID = 2,
+                EventId = 1,
+                UserId = 2,
                 UserIsResponsible = true
             }
             , new
             {
                 EventUserID = 2,
-                EventID = 1,
-                UserID = 1,
+                EventId = 1,
+                UserId = 1,
                 UserIsResponsible = false
             });
 
             modelBuilder.Entity<HobbyUser>()
             .HasData(new
             {
-                UserID = 1,
-                HobbyID = 1,
+                UserId = 1,
+                HobbyId = 1,
             }
             , new
             {
-                UserID = 2,
-                HobbyID = 2,
+                UserId = 2,
+                HobbyId = 2,
             }
             , new
             {
-                UserID = 3,
-                HobbyID = 3,
+                UserId = 3,
+                HobbyId = 3,
             });
 
 
@@ -225,7 +207,7 @@ namespace FriendFinderAPI.Context
             {
                 Hobby hobby = new Hobby
                 {
-                    HobbyID = i,
+                    HobbyId = i,
                     HobbyName = hobbies[i],
                 };
                 modelBuilder.Entity<Hobby>().HasData(hobby);

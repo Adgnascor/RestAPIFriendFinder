@@ -2,12 +2,12 @@ namespace FriendFinderAPI.Enums
 {
     public class Enums
     {
-        public enum HobbyActivationLevel
+        public enum UserSkillLevel
         {
-            Low,
-            Moderate,
-            High,
-            Extreme
+            Beginner,
+            Intermediate,
+            Advanced,
+            Master
         }
     }
 

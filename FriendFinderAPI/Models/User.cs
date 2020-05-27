@@ -9,16 +9,15 @@ namespace FriendFinderAPI.Models
 {
     public class User
     {
-        public int UserID { get; set; }
+        public int UserId { get; set; }
         public string UserName { get; set; }
         public string UserAdress { get; set; }
         public string UserPhoneNumber { get; set; }
         public int UserAge { get; set; }
-        public City UserCity { get; set; }
-        public int UserCityID { get; set; }
+        public City City { get; set; }
+        public int CityId { get; set; }
         public ICollection<HobbyUser> HobbyUsers { get; set; }
         public ICollection<EventUser> EventUsers { get; set; }
-
         public IEnumerable<Link> Links {get;set;}
     }
 }
