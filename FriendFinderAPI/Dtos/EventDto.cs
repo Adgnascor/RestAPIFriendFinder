@@ -8,9 +8,11 @@ namespace FriendFinderAPI.Dtos
     {
         public int EventId {get;set;}
         public string EventName {get;set;}
+
         [ForeignKey("HobbyId")]
         public int HobbyId { get; set; }
         public HobbyDto Hobby {get;set;}
+        
         [ForeignKey("CityId")]
         public int CityId { get; set; }
         public CityDto City { get;set; }
