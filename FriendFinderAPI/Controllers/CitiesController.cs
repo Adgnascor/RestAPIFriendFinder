@@ -27,15 +27,15 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/cities
         [HttpGet(Name = "GetCities")]
-        public async Task<ActionResult<IEnumerable<CityDto>>> GetCities()
+        public async Task<ActionResult<CityDto[]>> GetCities()
         {
             try
             {
                 var results = await _cityRepository.GetCities();
-                var mappedResults = _mapper.Map<IEnumerable<CityDto>>(results);
-                  for(int i = 0; i<results.Length;i++)
+                var mappedResults = _mapper.Map<CityDto[]>(results);
+                  for(int i = 0; i<mappedResults.Length;i++)
                   {
-                      results[i].CityLinks = CreateLinksGetAllCity(results[i]);
+                       mappedResults[i].Links = CreateLinksGetAllCities(mappedResults[i]);
                   }
                 return Ok(mappedResults);
             }
@@ -46,19 +46,20 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/cities/n
-        [HttpGet("{id}", Name = "GetCity")]
-        public async Task<ActionResult<CityDto>> GetCity(int id)
+        [HttpGet("{cityid}", Name = "GetCity")]
+        public async Task<ActionResult<CityDto>> GetCity(int cityid)
         {
             try
             {
-                var result = await _cityRepository.GetCity(id);
-                result.CityLinks = CreateLinksGetCity(result);
+                var result = await _cityRepository.GetCity(cityid);
                 if(result == null)
                 {
                     return NotFound();
                 }
 
                 var mappedResult = _mapper.Map<CityDto>(result);
+                mappedResult.Links = CreateLinksGetAllCities(mappedResult);
+
                 return Ok(mappedResult);
             }
             catch(Exception e)
@@ -67,13 +68,17 @@ namespace FriendFinderAPI.Controllers
             }
         }
         
-        [HttpGet("hobby/{id}", Name = "GetCitiesByHobby")]
-        public async Task<ActionResult<IEnumerable<CityDto>>> GetCitiesByHobby(int id)
+        [HttpGet("hobby/{hobbyid}", Name = "GetCitiesByHobby")]
+        public async Task<ActionResult<CityDto[]>> GetCitiesByHobby(int hobbyid)
         {
             try
             {
-                var results = await _cityRepository.GetCitiesByHobby(id);
-                var mappedResults = _mapper.Map<IEnumerable<CityDto>>(results);
+                var results = await _cityRepository.GetCitiesByHobby(hobbyid);
+                var mappedResults = _mapper.Map<CityDto[]>(results);
+                for(int i = 0; i<mappedResults.Length;i++)
+                  {
+                       mappedResults[i].Links = CreateLinksGetAllCities(mappedResults[i]);
+                  }
                 return Ok(mappedResults);
             }   
             catch(Exception e)
@@ -155,20 +160,8 @@ namespace FriendFinderAPI.Controllers
             }
             return BadRequest();
         }
-         private IEnumerable<Link> CreateLinksGetAllCity(City city)
-        {
-            var links = new[]
-            {
-            new Link{
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetCity",new {id = city.CityID} ).ToLower()
-            },
-          
-            };
-            return links;
-        }
-         private IEnumerable<Link> CreateLinksGetCity(City city)
+         
+         private IEnumerable<Link> CreateLinksGetAllCities(CityDto city)
         {
             var links = new[]
             {
@@ -176,19 +169,19 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel = "self",
-            Href = Url.Link("GetCity", new {id = city.CityID})
+            Href = Url.Link("GetCity", new {cityid = city.CityID})
             },
             new Link
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("DeleteCity", new {id = city.CityID})
+            Href = Url.Link("DeleteCity", new {cityid = city.CityID})
             },
             new Link
             {
-                Method = "PUT",
-                Rel = "self",
-                Href = Url.Link("PutCity", new {id = city.CityID})
+            Method = "PUT",
+            Rel = "self",
+            Href = Url.Link("PutCity", new {cityid = city.CityID})
             }
             };
             return links;

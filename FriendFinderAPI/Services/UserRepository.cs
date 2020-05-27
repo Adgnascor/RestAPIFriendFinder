@@ -33,7 +33,6 @@ namespace FriendFinderAPI.Services
             return await query.FirstOrDefaultAsync();
         }
 
-
         public async Task<User[]> GetUsersByHobby(int hobbyID)
         {
             _logger.LogInformation($"Getting Users for hobby with ID:{hobbyID}");

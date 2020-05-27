@@ -1,17 +1,17 @@
 # Routines for this project
 
-* ## Standup 09.00-09.20
+* ## Standup 10.00-10.20
 
   * First thing in the morning on workdays 
 
-* ## Working hours 09.00- 17.00
+* ## Working hours 10.00-15.00
 
-  * Every weekday 09.00 - 17.00
+  * Every weekday 10.00 - 15.00
     * This is the time when you should be available if you haven't said anything else to your team.
 
-* ## Status meeting 15.30
+* ## Status meeting 14.30
 
-  * Every weekday  15.30
+  * Every weekday 14.30
     * What have you done so far?
     * Any trouble?
     * Anything you want to inform your teammates before tomorrows standup
@@ -19,10 +19,11 @@
 * ## Paths of communication
 
   * Discord (Private channel for this project)
+  * Teams (in case discord not working)
 
 * ## Routines for pull requests
 
-  * Before you push anything to master, you need to make a pull request: And it needs to get approved by your teammates
+  * Before you push anything to master, you need to make a pull request: And it needs to get approved by your at least 2 of the teammates and the second person to approve can merge.
   * If you are uncertain of something, you can to a pull request, to get some feedback 
 
 * ## Tests - Unit test

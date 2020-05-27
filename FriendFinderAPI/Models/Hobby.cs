@@ -15,6 +15,6 @@ namespace FriendFinderAPI.Models
         public ICollection<HobbyUser> HobbyUsers { get; set; }
         public ICollection<HobbyLocation> HobbyLocations { get; set; }
 
-        public IEnumerable<Link> HobbyLinks {get;set;}
+        public IEnumerable<Link> Links {get;set;}
     }
 }

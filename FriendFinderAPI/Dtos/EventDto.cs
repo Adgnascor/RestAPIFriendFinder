@@ -15,9 +15,7 @@ namespace FriendFinderAPI.Dtos
         public int EventCityID { get; set; }
         public CityDto EventCity { get; set; }
         public ICollection<EventUserDto> EventUsers { get; set; }
-
         public IEnumerable<Link> Links { get; set; }
-
     }
 
 }

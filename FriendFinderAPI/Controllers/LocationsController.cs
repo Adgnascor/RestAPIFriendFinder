@@ -28,15 +28,15 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/locations
         [HttpGet(Name ="GetLocations")]
-        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocations()
+        public async Task<ActionResult<LocationDto[]>> GetLocations()
         {
             try
             {
                 var results = await _locationRepository.GetLocations();
-                var mappedResults = _mapper.Map<IEnumerable<LocationDto>>(results);
-                for(int i = 0; i<results.Length;i++)
+                var mappedResults = _mapper.Map<LocationDto[]>(results);
+                 for(int i = 0; i<mappedResults.Length;i++)
                 {
-                    results[i].LocationLinks = CreateLinksGetAllLocations(results[i]);
+                    mappedResults[i].Links = CreateLinksGetAllLocations(mappedResults[i]);
                 };
                 return Ok(mappedResults);
             }
@@ -47,31 +47,37 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/locations/n
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name ="GetLocation")]
         public async Task<ActionResult<LocationDto>> GetLocation(int id)
         {
             try
             {
                 var result = await _locationRepository.GetLocation(id);
-                result.LocationLinks = CreateLinksGetLocation(result);
+                
                 if(result == null)
                     return NotFound();
                 
                 var mappedResult = _mapper.Map<LocationDto>(result);
-                return Ok(mappedResult);            }
+                mappedResult.Links = CreateLinksGetAllLocations(mappedResult);
+                return Ok(mappedResult);            
+                }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
 
-        [HttpGet("hobby/{id}")]
-        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocationsByHobby(int id)
+        [HttpGet("hobby/{id}", Name ="GetLocationsByHobby")]
+        public async Task<ActionResult<LocationDto[]>> GetLocationsByHobby(int id)
         {
             try
             {
                 var results = await _locationRepository.GetLocationsByHobby(id);
-                var mappedResults = _mapper.Map<IEnumerable<LocationDto>>(results);
+                var mappedResults = _mapper.Map<LocationDto[]>(results);
+                 for(int i = 0; i<mappedResults.Length;i++)
+                {
+                    mappedResults[i].Links = CreateLinksGetAllLocations(mappedResults[i]);
+                };
                 return Ok(mappedResults);            }
             catch(Exception e)
             {
@@ -79,7 +85,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("{locationid}/hobby/{hobbyid}")]
+        [HttpGet("{locationid}/hobby/{hobbyid}", Name ="GetLocationByHobby")]
         public async Task<ActionResult<LocationDto>> GetLocationByHobby(int locationid, int hobbyid)
         {
             try
@@ -89,6 +95,7 @@ namespace FriendFinderAPI.Controllers
                     return NotFound();
 
                 var mappedResult = _mapper.Map<LocationDto>(result);
+                mappedResult.Links = CreateLinksGetAllLocations(mappedResult);
                 return Ok(mappedResult);              }
             catch(Exception e)
             {
@@ -159,20 +166,8 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
-        private IEnumerable<Link> CreateLinksGetAllLocations(Location location)
-        {
-            var links = new[]
-            {
-            new Link{
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetLocation",new {id = location.LocationID} ).ToLower()
-            },
-          
-            };
-            return links;
-        }
-        private IEnumerable<Link> CreateLinksGetLocation(Location location)
+        
+        private IEnumerable<Link> CreateLinksGetAllLocations(LocationDto location)
         {
             var links = new[]
             {
@@ -190,9 +185,9 @@ namespace FriendFinderAPI.Controllers
             },
             new Link
             {
-                Method = "PUT",
-                Rel = "self",
-                Href = Url.Link("PutLocation", new {id = location.LocationID}).ToLower()
+            Method = "PUT",
+            Rel = "self",
+            Href = Url.Link("PutLocation", new {id = location.LocationID}).ToLower()
             }
             };
             return links;

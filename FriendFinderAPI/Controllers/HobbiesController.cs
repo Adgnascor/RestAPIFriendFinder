@@ -28,16 +28,16 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/hobbies
         [HttpGet(Name = "GetHobbies")]
-        public async Task<ActionResult<IEnumerable<HobbyDto>>> GetHobbies()
+        public async Task<ActionResult<HobbyDto[]>> GetHobbies()
         {
             try
             {
                  
                 var results = await _hobbyRepository.GetHobbies();
-                var mappedResults = _mapper.Map<IEnumerable<HobbyDto>>(results);
-                for(int i = 0; i<results.Length;i++)
+                var mappedResults = _mapper.Map<HobbyDto[]>(results);
+                for(int i = 0; i<mappedResults.Length;i++)
                 {
-                    results[i].HobbyLinks =CreateLinksGetAllHobbys(results[i]);
+                    mappedResults[i].Links =CreateLinksGetAllHobbys(mappedResults[i]);
                 }
                 return Ok(mappedResults);
             }
@@ -48,17 +48,18 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/hobbies/n
-        [HttpGet("{id}", Name ="GetHobby")]
-        public async Task<ActionResult<HobbyDto>> GetHobby(int id)
+        [HttpGet("{hobbyid}", Name ="GetHobby")]
+        public async Task<ActionResult<HobbyDto>> GetHobby(int hobbyid)
         {
             try
             {
-                var result = await _hobbyRepository.GetHobby(id);
-                result.HobbyLinks = CreateLinksGetHobby(result);
+                var result = await _hobbyRepository.GetHobby(hobbyid);
+                
                 if(result == null)
                     return NotFound();
 
                 var mappedResult = _mapper.Map<HobbyDto>(result);
+                mappedResult.Links = CreateLinksGetAllHobbys(mappedResult);
                 return Ok(mappedResult);
             }
             catch(Exception e)
@@ -68,7 +69,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("hobby/{hobbyid}/city/{cityid}", Name ="GetHobbyByCity")]
-        public async Task<ActionResult<HobbyDto>> GetHobbyByCity(int hobbyid, int cityid)
+        public async Task<ActionResult<HobbyDto[]>> GetHobbyByCity(int hobbyid, int cityid)
         {
             try
             {
@@ -76,21 +77,30 @@ namespace FriendFinderAPI.Controllers
                 if (result == null)
                     return NotFound();
 
-                var mappedResult = _mapper.Map<HobbyDto>(result);
-                return Ok(mappedResult);            }
+                var mappedResults = _mapper.Map<HobbyDto[]>(result);
+                for(int i = 0; i<mappedResults.Length;i++)
+                {
+                    mappedResults[i].Links =CreateLinksGetAllHobbys(mappedResults[i]);
+                }
+                return Ok(mappedResults);            
+                }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-        [HttpGet("city/{id}", Name="GetHobbiesByCity")]
-        public async Task<ActionResult<IEnumerable<HobbyDto>>> GetHobbiesByCity(int id)
+        [HttpGet("city/{hobbyid}", Name="GetHobbiesByCity")]
+        public async Task<ActionResult<HobbyDto>> GetHobbiesByCity(int hobbyid)
         {
             try
             {
-                var result = await _hobbyRepository.GetHobbiesByCity(id);
-                var mappedResult = _mapper.Map<IEnumerable<HobbyDto>>(result);
-                return Ok(mappedResult);           
+                var result = await _hobbyRepository.GetHobbiesByCity(hobbyid);
+                var mappedResults = _mapper.Map<HobbyDto[]>(result);
+                for(int i = 0; i<mappedResults.Length;i++)
+                {
+                    mappedResults[i].Links =CreateLinksGetAllHobbys(mappedResults[i]);
+                }
+                return Ok(mappedResults);           
             }
             catch(Exception e)
             {
@@ -98,14 +108,18 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("user/{id}", Name ="GetHobbiesByUser")]
-        public async Task<ActionResult<IEnumerable<HobbyDto>>> GetHobbiesByUser(int id)
+        [HttpGet("user/{hobbyid}", Name ="GetHobbiesByUser")]
+        public async Task<ActionResult<HobbyDto>> GetHobbiesByUser(int hobbyid)
         {
                 try
                 {
-                    var result = await _hobbyRepository.GetHobbiesByUser(id);
-                    var mappedResult = _mapper.Map<IEnumerable<HobbyDto>>(result);
-                    return Ok(mappedResult); 
+                    var result = await _hobbyRepository.GetHobbiesByUser(hobbyid);
+                    var mappedResults = _mapper.Map<HobbyDto[]>(result);
+                    for(int i = 0; i<mappedResults.Length;i++)
+                {
+                    mappedResults[i].Links =CreateLinksGetAllHobbys(mappedResults[i]);
+                }
+                    return Ok(mappedResults); 
                 }
                 catch(Exception e)
                 {
@@ -134,7 +148,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/hobbies/n
-        [HttpPut("{id}", Name= "PutHobby")]
+        [HttpPut("{hobbyid}", Name= "PutHobby")]
         public async Task<ActionResult<HobbyDto>> PutHobby(int hobbyID, HobbyDto hobbyDto)
         {
             try
@@ -158,7 +172,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/hobbies/n
-        [HttpDelete("{id}", Name ="DeleteHobby")]
+        [HttpDelete("{hobbyid}", Name ="DeleteHobby")]
         public async Task<ActionResult> DeleteHobby(int hobbyID)
         {
             try
@@ -178,20 +192,8 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
-         private IEnumerable<Link> CreateLinksGetAllHobbys(Hobby hobby)
-        {
-            var links = new[]
-            {
-            new Link{
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetHobby",new {id = hobby.HobbyID} ).ToLower()
-            },
-          
-            };
-            return links;
-        }
-         private IEnumerable<Link> CreateLinksGetHobby(Hobby hobby)
+        
+         private IEnumerable<Link> CreateLinksGetAllHobbys(HobbyDto hobby)
         {
             var links = new[]
             {
@@ -199,19 +201,19 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel = "self",
-            Href = Url.Link("GetHobby", new {id = hobby.HobbyID})
+            Href = Url.Link("GetHobby", new {hobbyid = hobby.HobbyID})
             },
             new Link
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("DeleteHobby", new {id = hobby.HobbyID})
+            Href = Url.Link("DeleteHobby", new {hobbyid = hobby.HobbyID})
             },
             new Link
             {
                 Method = "PUT",
                 Rel = "self",
-                Href = Url.Link("PutHobby", new {id = hobby.HobbyID})
+                Href = Url.Link("PutHobby", new {hobbyid = hobby.HobbyID})
             }
             };
             return links;

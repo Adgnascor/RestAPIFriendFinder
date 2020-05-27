@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using FriendFinderAPI.Models;
 
 namespace FriendFinderAPI.Dtos
 {
@@ -11,5 +13,6 @@ namespace FriendFinderAPI.Dtos
         [ForeignKey("UserID")]
         public int UserID { get; set; }
         public UserDto User { get; set; }
+        public IEnumerable<Link> Links {get; set;}
     }
 }

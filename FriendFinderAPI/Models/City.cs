@@ -14,6 +14,6 @@ namespace FriendFinderAPI.Models
         public ICollection<User> CityUsers { get; set; }
         public ICollection<Location> CityLocations { get; set; }
 
-        public IEnumerable<Link> CityLinks {get;set;}
+        public IEnumerable<Link> Links {get;set;}
     }
 }
