@@ -3,14 +3,16 @@ using FriendFinderAPI.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FriendFinderAPI.Migrations
 {
     [DbContext(typeof(FriendFinderContext))]
-    partial class FriendFinderContextModelSnapshot : ModelSnapshot
+    [Migration("20200526131938_RemoveTeacherColumn")]
+    partial class RemoveTeacherColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

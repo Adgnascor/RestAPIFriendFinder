@@ -15,20 +15,17 @@ namespace FriendFinderAPI.Services
         {
             _context = context;
             _logger = logger;
-
         }       
          public void Add<T>(T entity) where T : class
         {
            _logger.LogInformation($"Adding object of type {entity.GetType()} ");
            _context.Add(entity);
-
         }
 
         public void Delete<T>(T entity) where T : class
         {
            _logger.LogInformation($"Deleting object of type {entity.GetType()}");
            _context.Remove(entity);
-
         }
 
         public async Task<bool> Save()
@@ -41,7 +38,6 @@ namespace FriendFinderAPI.Services
         {
             _logger.LogInformation($"Updating object of type {entity.GetType()}");
             _context.Update(entity);
-
         }
     }
 }

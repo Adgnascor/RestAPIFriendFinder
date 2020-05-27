@@ -22,145 +22,177 @@ namespace FriendFinderAPI.Controllers
         private readonly IMapper _mapper;
 
         private LinkGenerator _linkGenerator;
-        public UsersController(IUserRepository userRepository, IMapper mapper, LinkGenerator linkGenerator) 
+        public UsersController(IUserRepository userRepository, IMapper mapper, LinkGenerator linkGenerator)
         {
-            _userRepository = userRepository; 
+            _userRepository = userRepository;
             _mapper = mapper;
             _linkGenerator = linkGenerator;
-        }    
+        }
 
         //GET:      api/v1.0/users
-        [HttpGet(Name= "GetAllUsers")]
+        [HttpGet(Name = "GetAllUsers")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             try
             {
                 var results = await _userRepository.GetUsers();
+                if (results == null)
+                {
+                    return NotFound();
+                }
                 var mappedResults = _mapper.Map<IEnumerable<UserDto>>(results);
-                for(int i =0; i< results.Length; i++)
+                for (int i = 0; i < results.Length; i++)
                 {
                     results[i].UserLinks = CreateLinksGetAllUsers(results[i]);
                 }
+
                 return Ok(mappedResults);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
 
         //GET:      api/v1.0/user/n
-        [HttpGet("{id}", Name ="GetUser")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<ActionResult<UserDto>> GetUser(int id)
         {
             try
             {
                 var result = await _userRepository.GetUser(id);
-                if(result == null)
+                if (result == null)
+                {
                     return NotFound();
+                }
 
                 result.UserLinks = CreateLinksGetUser(result);
                 var mappedResult = _mapper.Map<UserDto>(result);
                 return Ok(mappedResult);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-        
-        [HttpGet("hobby/{id}", Name ="GetUserByHobby")]
+
+        [HttpGet("hobby/{id}", Name = "GetUserByHobby")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByHobby(int id)
         {
             try
             {
                 var results = await _userRepository.GetUsersByHobby(id);
+                if (results == null)
+                {
+                    return NotFound();
+                }
+                
                 var mappedResults = _mapper.Map<IEnumerable<UserDto>>(results);
-                return Ok(mappedResults);            }
-            catch(Exception e)
+                return Ok(mappedResults);
+            }
+            catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-       
-        [HttpGet("teacher/hobby/{id}", Name = "GetUserTeacherByHobby")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUserTeacherByHobby(int id)
+
+        // [HttpGet("teacher/hobby/{id}", Name = "GetUserTeacherByHobby")]
+        // public async Task<ActionResult<IEnumerable<UserDto>>> GetUserTeacherByHobby(int id)
+        // {
+        //     try
+        //     {
+        //         var results = await _userRepository.GetUserTeacherByHobby(id);
+        //         var mappedResults = _mapper.Map<IEnumerable<UserDto>>(results);
+        //         return Ok(mappedResults);    
+        //     }
+        //     catch(Exception e)
+        //     {
+        //         return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+        //     }
+        // }
+
+        [HttpGet("hobby/{hobbyId}/city/{cityId}", Name = "GetUserByHobbyInCity")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByHobbyInCity(int hobbyId, int cityId)
         {
             try
             {
-                var results = await _userRepository.GetUserTeacherByHobby(id);
+                var results = await _userRepository.GetUsersByHobbyInCity(hobbyId,cityId);
+                if (results == null)
+                {
+                    return NotFound();
+                }
                 var mappedResults = _mapper.Map<IEnumerable<UserDto>>(results);
-                return Ok(mappedResults);    
+                return Ok(mappedResults);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
 
         //POST:     api/v1.0/users
-        [HttpPost (Name= "PostUser")]
+        [HttpPost(Name = "PostUser")]
         public async Task<ActionResult<UserDto>> PostUser(UserDto userDto)
         {
             try
             {
                 var mappedEntity = _mapper.Map<User>(userDto);
                 _userRepository.Add(mappedEntity);
-                if(await _userRepository.Save())
+                if (await _userRepository.Save())
                     return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity));
             }
             catch (Exception e)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
             return BadRequest();
         }
 
         //PUT:      api/v1.0/users/n
-        [HttpPut("{userID}", Name= "PutUser")]
+        [HttpPut("{userID}", Name = "PutUser")]
         public async Task<ActionResult<UserDto>> PutUser(int userID, UserDto userDto)
         {
             try
             {
                 var oldUser = await _userRepository.GetUser(userID);
-                if(oldUser == null)
+                if (oldUser == null)
                     return NotFound($"Can't find any user with that id: {userID}");
 
                 var newUser = _mapper.Map(userDto, oldUser);
                 _userRepository.Update(newUser);
-                if(await _userRepository.Save())
+                if (await _userRepository.Save())
                     return NoContent();
             }
             catch (Exception e)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
 
             return BadRequest();
         }
 
         //DELETE        api/v1.0/users/n
-        [HttpDelete("{id}", Name= "DeleteUser")]
-        public async Task<ActionResult> DeleteUser(int userID)
+        [HttpDelete("{id}", Name = "DeleteUser")]
+        public async Task<ActionResult> DeleteUser(int id)
         {
             try
             {
-                var user = await _userRepository.GetUser(userID);
-                if(user == null)
-                    return NotFound($"We could not find a user with that id: {userID}");
-                
+                var user = await _userRepository.GetUser(id);
+                if (user == null)
+                    return NotFound($"We could not find a user with that id: {id}");
+
                 _userRepository.Delete(user);
-                if(await _userRepository.Save())
+                if (await _userRepository.Save())
                     return NoContent();
             }
             catch (Exception e)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
 
             return BadRequest();
         }
-        private IEnumerable<Link> CreateLinksGetUser(User user)
+        private ICollection<Link> CreateLinksGetUser(User user)
         {
             var links = new[]
             {
@@ -186,18 +218,18 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel ="CityUser",
-            Href = Url.Link("GetCity", new {id = user.UserCityID})           
-            }, 
+            Href = Url.Link("GetCity", new {id = user.UserCityID})
+            },
             new Link
             {
                 Method = "GET",
                 Rel ="UserHobbies",
-                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()           
+                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()
             }
             };
             return links;
         }
-        private IEnumerable<Link> CreateLinksGetAllUsers(User user)
+        private ICollection<Link> CreateLinksGetAllUsers(User user)
         {
             var links = new[]
             {
@@ -211,15 +243,15 @@ namespace FriendFinderAPI.Controllers
             {
                 Method = "GET",
                 Rel ="CityUser",
-                Href = Url.Link("GetCity", new {id = user.UserCityID}).ToLower()           
+                Href = Url.Link("GetCity", new {id = user.UserCityID}).ToLower()
             },
             new Link
             {
                 Method = "GET",
                 Rel ="UserHobbies",
-                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()           
+                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()
             }
-          
+
             };
             return links;
         }

@@ -64,7 +64,6 @@ namespace FriendFinderAPI.Tests
             UserAdress = "Drottninggatan",
             UserPhoneNumber = "+46XXXXXXX",
             UserAge = 20,
-            UserIsTeacher = false
             },
             new User{
             UserID = 2,
@@ -72,7 +71,6 @@ namespace FriendFinderAPI.Tests
             UserAdress = "Kungsgatan",
             UserPhoneNumber = "+47XXXXXXX",
             UserAge = 23,
-            UserIsTeacher = false
             
             }
 

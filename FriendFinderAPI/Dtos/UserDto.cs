@@ -9,7 +9,6 @@ namespace FriendFinderAPI.Dtos
         public string UserAdress { get; set; }
         public string UserPhoneNumber { get; set; }
         public int UserAge { get; set; }
-        public bool UserIsTeacher { get; set; }
         public CityDto UserCity { get; set; }
         public int UserCityID { get; set; }
         public ICollection<HobbyUserDto> HobbyUsers { get; set; }
