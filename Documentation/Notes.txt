@@ -1,1 +1,7 @@
                 .ForMember(v => v.Venue, o => o.Ignore());
+
+
+//Ignore Mapping:
+            CreateMap<User, UserDto>()
+                .ReverseMap()
+               .ForPath(x => x.Links, x => x.Ignore());
